@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+<head>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<!-- Inc -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+
+<!-- Style.Inc -->
+<link href='https://fonts.googleapis.com/css?family=Kurale' rel='stylesheet'>
+
+
+<!-- HTML -->
+<div class="container-fluid d-flex justify-content-center">
+ <div id="frozen_quiz" class="d-flex col-sm-8 justify-content-center">
+  <div id="shell" class="d-flex flex-column justify-content-center p-2">
+   <span id="start_text" class="d-flex align-self-center">Which Frozen Character Are You?</span>
+   <img src="Inc/frozen_start.jpg" class="py-2"/>
+   <button  id="start_btn" class="d-flex align-self-center"
+            onclick="Q_A(store_quiz_data[0][0], store_quiz_data[0][1],
+            store_quiz_data[0][2], store_quiz_data[0][3], store_quiz_data[0][4], 0);">
+    Let's play
+   </button>
+  </div>
+ </div>
+</div>
+
+<!-- Style -->
+<style>
+*:hover { cursor: default; }
+
+#frozen_quiz { font-family: "Kurale"; border: 2px solid #001d4d; }
+#start_text { font-size: 30px; }
+#start_btn {
+ height: 72px;
+ padding: 10px;
+ font-size: 30px;
+ background-color: #ccdcff;
+
+ border: none;
+ border-radius: 5px;
+ }
+.img { margin-bottom: 20px;}
+.msg { text-align: center; font-size: 30px; font-family: "Kurale"; margin: 5px 0 10px 0; }
+</style>
+
+<!-- Script -->
+<script>
+// counter set
+var i = 0;
+
+// points counter set
+var bodovi = 0;
+
+/* OOP quiz.set */
+
+var quiz = {
+ quiz : function(q, a_1, a_2, a_3, a_4) {
+  // reference
+  var me = this;
+
+  // get propertys
+  this.q = q;
+
+  me.a_1 = a_1;
+  me.a_2 = a_2;
+  me.a_3 = a_3;
+  me.a_4 = a_4;
+
+  // new shell
+  var f = document.getElementById("frozen_quiz");
+  var s = document.getElementById("shell");
+
+  s.remove();
+
+  var s = document.createElement("div");
+  s.id = "shell";
+
+  f.appendChild(s);
+
+  // question
+  var q = document.createElement("div");
+  q.innerHTML = this.q;
+  s.appendChild(q);
+
+  // answers
+  var ans_1 = document.createElement("div");
+  ans_1.innerHTML = me.a_1;
+  s.appendChild(ans_1);
+
+  var ans_2 = document.createElement("div");
+  ans_2.innerHTML = me.a_2;
+  s.appendChild(ans_2);
+
+  var ans_3 = document.createElement("div");
+  ans_3.innerHTML = me.a_3;
+  s.appendChild(ans_3);
+
+  var ans_4 = document.createElement("div");
+  ans_4.innerHTML = me.a_4;
+  s.appendChild(ans_4);
+
+  // question.style
+  q.setAttribute("style", "color: blue;");
+
+  // answers.style
+  ans_1.setAttribute("style", "color: red;");
+  ans_2.setAttribute("style", "color: red;");
+  ans_3.setAttribute("style", "color: red;");
+  ans_4.setAttribute("style", "color: red;");
+
+  // data.group
+  ans_1.className = "ans";
+  ans_2.className = "ans";
+  ans_3.className = "ans";
+  ans_4.className = "ans";
+
+  // answers.click(event)
+  var ans = document.getElementsByClassName("ans");
+  var a_i = 0;
+
+  if(i == 7) {
+   ans[0].addEventListener("click", function() {
+    Q_R(3);});
+    ans[1].addEventListener("click", function() {
+    Q_R(2);});
+    ans[2].addEventListener("click", function() {
+    Q_R(4);});
+    ans[3].addEventListener("click", function() {
+    Q_R(1);});
+   }
+  else {
+   ans[0].addEventListener("click", function() {
+    Q_A(store_quiz_data[i][0], store_quiz_data[i][1],
+        store_quiz_data[i][2], store_quiz_data[i][3], store_quiz_data[i][4],
+        pts[i][0]);});
+   ans[1].addEventListener("click", function() {
+    Q_A(store_quiz_data[i][0], store_quiz_data[i][1],
+        store_quiz_data[i][2], store_quiz_data[i][3], store_quiz_data[i][4],
+        pts[i][1]);});
+   ans[2].addEventListener("click", function() {
+    Q_A(store_quiz_data[i][0], store_quiz_data[i][1],
+        store_quiz_data[i][2], store_quiz_data[i][3], store_quiz_data[i][4],
+        pts[i][2]);});
+   ans[3].addEventListener("click", function() {
+    Q_A(store_quiz_data[i][0], store_quiz_data[i][1],
+        store_quiz_data[i][2], store_quiz_data[i][3], store_quiz_data[i][4],
+        pts[i][3]);});
+   }
+  }
+ };
+
+/* OOP quiz.get */
+function Q_A(q, a_1, a_2, a_3, a_4, myPts) {
+ // reference
+ bodovi+=myPts;
+ var me = this;
+
+ // get propertys
+ me.q = q;
+
+ me.a_1 = a_1;
+ me.a_2 = a_2;
+ me.a_3 = a_3;
+ me.a_4 = a_4;
+
+ // OOP quiz.next_question
+ quiz.quiz(me.q, me.a_1, me.a_2, me.a_3, me.a_4);
+ i++;
+ }
+
+// store.quiz.data
+var store_quiz_data = [
+ ["Do you believe in love at first sight?",
+  "There is no such thing",
+  "It could happen",
+  "People who believe in love at first sight are naive",
+  "Yes, yes a thousand times yes!"],
+ ["How would your friends describe you?",
+  "Lazy",
+  "Wise",
+  "Fun",
+  "Stupid"],
+ ["What's your favorite color?",
+  "Red",
+  "Blue",
+  "Green",
+  "Yellow"],
+ ["Where would you like to vacation?",
+  "I don't want vacation",
+  "Paris",
+  "Russia",
+  "Anywhere"],
+ ["What annoys you most?",
+  "Ignorance",
+  "Naive people",
+  "Serious people",
+  "Selfish people"],
+ ["What would you rather be doing?",
+  "Learning",
+  "Watching TV",
+  "Exercising",
+  "Sleeping"],
+ ["How many friends do you need?",
+  "A couple close friends",
+  "Average",
+  "Alot",
+  "None"],
+ ["Do you mind the cold?",
+  "It's fun to build a snowman",
+  "Never bothered me",
+  "Little",
+  "Don't like it"]
+];
+
+// evaluate.quiz.points
+var pts = [ [],
+ [1, 2, 3, 4],
+ [2, 3, 1, 4],
+ [1, 3, 4, 2],
+ [1, 2, 3, 4],
+ [1, 3, 2, 4],
+ [4, 3, 2, 1],
+ [2, 4, 3, 1],
+ [3, 2, 4, 1]
+];
+
+// quiz.result
+function Q_R(myPts) {
+ // new shell
+ var f = document.getElementById("frozen_quiz");
+ var s = document.getElementById("shell");
+
+ s.remove();
+
+ var s = document.createElement("div");
+ s.id = "shell";
+
+ f.appendChild(s);
+
+ // result.show.img_message
+ var img = document.createElement("img");
+ var msg = document.createElement("div");
+ bodovi+=myPts;
+
+ if(bodovi == 8 || bodovi == 9 || bodovi == 10) {
+  img.setAttribute("src", "Inc/Results/result_hans.jpg");
+  msg.innerHTML = "You Are: Hans!";
+
+  img.className = "img";
+  msg.className = "msg";
+   }
+ else if(bodovi == 11 || bodovi == 12) {
+  img.setAttribute("src", "Inc/Results/result_marshmallow.jpg");
+  msg.innerHTML = "You Are: Marshmallow!";
+
+  img.className = "img";
+  msg.className = "msg";
+   }
+ else if(bodovi == 13 || bodovi == 14 || bodovi == 15) {
+  img.setAttribute("src", "Inc/Results/result_duke.jpg");
+  msg.innerHTML = "You Are: Duke!";
+
+  img.className = "img";
+  msg.className = "msg";
+   }
+ else if(bodovi == 16 || bodovi == 17) {
+  img.setAttribute("src", "Inc/Results/result_oaken.jpg");
+  msg.innerHTML = "You Are: Oaken!";
+
+  img.className = "img";
+  msg.className = "msg";
+   }
+ else if(bodovi == 18 || bodovi == 19 || bodovi == 20) {
+  img.setAttribute("src", "Inc/Results/result_snowgie.jpg");
+  msg.innerHTML = "You Are: Snowgie!";
+
+  img.className = "img";
+  msg.className = "msg";
+   }
+ else if(bodovi == 21 || bodovi == 22) {
+  img.setAttribute("src", "Inc/Results/result_sven.jpg");
+  msg.innerHTML = "You Are: Sven!";
+
+  img.className = "img";
+  msg.className = "msg";
+   }
+ else if(bodovi == 23 || bodovi == 24 || bodovi == 25) {
+  img.setAttribute("src", "Inc/Results/result_kristoff.jpg");
+  msg.innerHTML = "You Are: Kristoff!";
+
+  img.className = "img";
+  msg.className = "msg";
+   }
+ else if(bodovi == 26 || bodovi == 27) {
+  img.setAttribute("src", "Inc/Results/result_olaf.jpg");
+  msg.innerHTML = "You Are: Olaf!";
+
+  img.className = "img";
+  msg.className = "msg";
+   }
+ else if(bodovi == 28 || bodovi == 29 || bodovi == 30) {
+  img.setAttribute("src", "Inc/Results/result_anna.jpg");
+  msg.innerHTML = "You Are: Anna!";
+
+  img.className = "img";
+  msg.className = "msg";
+   }
+ else if(bodovi == 31 || bodovi == 32) {
+  img.setAttribute("src", "Inc/Results/result_frozen.jpg");
+  msg.innerHTML = "You Are: Elsa!";
+
+  img.className = "img";
+  msg.className = "msg";
+   }
+
+
+ s.appendChild(msg);
+ s.appendChild(img);
+ }
+
+$(document).on("click", function() { console.log("i:"); console.log(i); console.log(bodovi); console.log(""); });
+</script>
